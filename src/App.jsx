@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -10,6 +10,46 @@ function App() {
   const [bananas, setBananas] = useState("cool bananas");
 
   const [readData, setData] = useState("default data here");
+
+  const [pokemonName, setPokemonName] = useState("");
+  const [pokemonImage, setPokemonImage] = useState("");
+
+
+  useEffect(() => {
+
+    const getPokemonData = async () => {
+      let result = await fetch(`https://pokeapi.co/api/v2/pokemon/${Math.floor(Math.random() * 1025) + 1}`)
+      .then(response => response.json());
+  
+      setPokemonName(result.name);
+      setPokemonImage(result.sprites.front_default);
+    }
+
+    console.log("Hello from inside the component");
+
+    getPokemonData();
+
+    return(() => {
+      console.log("Component will unmount now.");
+    })
+  }, []);
+
+
+  useEffect(() => {
+    console.log(`Retrieved Pokemon data: name: ${pokemonName}, image: ${pokemonImage}`);
+  }, [pokemonName, pokemonImage]);
+
+  // useEffect(callback, dependencyArray);
+
+  useEffect(() => {
+    console.log(`Count is now ${count}`);
+  }, [count]); // This dictates it will log only when the count changes e.g. depends on 'count' value
+
+
+  useEffect(() => {
+    console.log(`bananas: ${bananas}, readData: ${JSON.stringify(readData)}`);
+  });
+
 
   return (
     <>
